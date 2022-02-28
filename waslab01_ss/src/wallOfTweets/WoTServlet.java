@@ -8,11 +8,11 @@ import java.util.Locale;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 /**
  * Servlet implementation class WoTServlet
  */
@@ -36,12 +36,29 @@ public class WoTServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Vector<Tweet> tweets = Database.getTweets();
-			printHTMLresult(tweets, request, response);
+			if (request.getHeader("Accept").equals("text/plain")) 
+				printPLAINresult(tweets,request, response);
+			else  printHTMLresult(tweets, request, response);
+				
+			
+			
 		}
 
 		catch (SQLException ex ) {
 			throw new ServletException(ex);
 		}
+	}
+
+	private void printPLAINresult(Vector<Tweet> tweets, HttpServletRequest req, HttpServletResponse res) throws IOException {
+		// TODO Auto-generated method stub
+		res.setContentType ("text/html");
+		res.setCharacterEncoding(ENCODING);
+		PrintWriter out = res.getWriter( );
+		for(Tweet tweet: tweets){
+			out.println("tweet #" + tweet.getTwid() + ": " +
+					tweet.getAuthor() + ": " + tweet.getText() + " [" + tweet.getDate() + "]");
+		}
+		
 	}
 
 	/**
