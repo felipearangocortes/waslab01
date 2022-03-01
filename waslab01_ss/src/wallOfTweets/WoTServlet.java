@@ -8,7 +8,6 @@ import java.util.Locale;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +66,16 @@ public class WoTServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// This method does NOTHING but redirect to the main page
-
+		
+		
+		try {
+			String author = request.getParameter("author");
+			String tweet_text = request.getParameter("tweet_text");
+			Database.insertTweet( author, tweet_text);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		response.sendRedirect(request.getContextPath());
 	}
 
